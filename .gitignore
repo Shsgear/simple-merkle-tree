@@ -1,0 +1,25 @@
+# File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
+
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,macos
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
+# Thumbnails
+._*
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+
+node_modules

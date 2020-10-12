@@ -1,0 +1,21 @@
+{
+  "name": "merkle-tree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.0.0",
+    "merkletreejs": "^0.2.9"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^3.1.47",
+    "@types/node": "^14.11.2",
+    "eslint": "^7.9.0"
+  }
+}
