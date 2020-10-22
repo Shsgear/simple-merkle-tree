@@ -1,9 +1,9 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 
 
 const sha256 = (payload: any) => crypto.createHash('sha256').digest(payload);
 
-class MerkleTree1 {
+class MerkleTree {
   private leaves: Buffer[];
   private depth: number;
   private layers: any[]
@@ -11,22 +11,22 @@ class MerkleTree1 {
   private useHash: boolean;
 
   constructor(leaves: any[], hashFunc: any = sha256, useHash: boolean) {
+    this.leaves = leaves.map(this._toBuffer);
     if (useHash) {
       this.leaves.map(hashFunc)
     }
-    this.leaves = leaves.map(this._toBuffer);
     this.layers = [this.leaves];
   }
 
   
   private _toBuffer(value: any): Buffer {
-    return MerkleTree1.toBuffer(value);
+    return MerkleTree.toBuffer(value);
   }
 
 
   static toBuffer(value: any): Buffer {
     if (Buffer.isBuffer(value)) return value;
-    if (typeof value === 'string') Buffer.from(value);
+    if (typeof value === 'string') return Buffer.from(value);
     throw new Error(`accept string type, but recieved ${typeof value}`);
   }
 
@@ -34,9 +34,47 @@ class MerkleTree1 {
     return this.leaves;
   };
 
-  public print: () => string;
+  public getRoot ():Buffer {
+    return this.layers[this.layers.length - 1][0] || Buffer.from([])
+  }
 
-  
+  public getProof (leaf: Buffer, index?: number): any[] {
+    leaf = this._toBuffer(leaf)
+    const proof = []
+
+    if (typeof index !== 'number') {
+      index = -1
+
+      for (let i = 0; i < this.leaves.length; i++) {
+        if (Buffer.compare(leaf, this.leaves[i]) === 0) {
+          index = i
+        }
+      }
+    }
+
+    if (index <= -1) {
+      return []
+    }
+
+    for (let i = 0; i < this.layers.length; i++) {
+      const layer = this.layers[i]
+      const isRightNode = index % 2
+      const pairIndex = (isRightNode ? index - 1 : index + 1)
+
+      if (pairIndex < layer.length) {
+        proof.push({
+          position: isRightNode ? 'left' : 'right',
+          data: layer[pairIndex]
+        })
+      }
+
+      // set index to parent index
+      index = (index / 2) | 0
+    }
+
+    return proof
+    
+  }
 
   public verify (proof: any[], targetNode: Buffer, root: Buffer): boolean {
   
@@ -75,8 +113,10 @@ class MerkleTree1 {
     return Buffer.compare(hash, root) === 0
   }
 
-  
+  static print (tree: any):void {
+    console.log(tree.toString())
+  }
 
 }
 
-export default MerkleTree1;
+export default MerkleTree;
